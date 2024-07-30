@@ -9,19 +9,23 @@
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#000034"
     },
     "ios": {
       "supportsTablet": true
     },
     "android": {
+      "jsEngine": "hermes",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.vaodyssey.FirstProject"
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
-  }
+    },
+    "sdkVersion": "51.0.0"
+  },
+  "name": "firstproject"
 }

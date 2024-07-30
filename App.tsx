@@ -1,20 +1,22 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { useEffect, useState } from 'react';
+import { Button, Alert, StyleSheet, Text, View, SafeAreaView, } from 'react-native';
+import "react-native-devsettings";
+import LoginScreen from './src/screens/LoginScreen';
+import { PaperProvider } from 'react-native-paper';
 
 export default function App() {
+  const [name, setName] = useState("");
+  const buttonPressed = () => {
+    console.log("Button pressed");
+  }
+
+
   return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <PaperProvider>
+      <LoginScreen />
+    </PaperProvider>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+
