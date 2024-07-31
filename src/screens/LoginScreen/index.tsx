@@ -7,8 +7,13 @@ import TextInputSection from "./textInputSection";
 import { LoginDetails } from "../../entities/LoginDetails";
 import { containerStyles } from "../../components/styles";
 import { API_Login } from "../../services/apis/auth";
+import { NavigationProp, ParamListBase } from "@react-navigation/native";
 
-export default function LoginScreen() {
+
+type LoginScreenProps = {
+    navigation: NavigationProp<ParamListBase>
+}
+export default function LoginScreen({ navigation }: LoginScreenProps) {
     const [loading, setLoading] = useState(false);
 
     const handleLogin = (loginDetails: LoginDetails) => {
@@ -16,10 +21,11 @@ export default function LoginScreen() {
         API_Login(loginDetails).then((response) => {
             setLoading(false)
             console.log(response)
+            navigation.navigate('Products')
         })
     }
     return (
-        <View style={containerStyles.auth}>
+        <View style={styles.container}>
             {loading ? (
                 <View>
                     <ActivityIndicator size="large" />
@@ -35,4 +41,12 @@ export default function LoginScreen() {
         </View>
     )
 }
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'stretch',
+        padding: 50,
+    },
+});
 

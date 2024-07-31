@@ -1,3 +1,5 @@
 export const RED = "#ff0000"
 export const DARK_BLUE = "#000034"
 export const LIGHT_BLUE = "#ADD8E6"
+export const DARK_RED = "#8B0000"
+export const PALE_PURPLE = "#f7e9f7"

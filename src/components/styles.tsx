@@ -9,6 +9,11 @@ export const containerStyles = StyleSheet.create({
     products: {
         flex: 1,
         justifyContent: 'center',
-        paddingVertical: 80
-    }
+        paddingVertical: 40
+    },
+    productDetails: {
+        flex: 1,
+        justifyContent: 'center',
+        paddingVertical: 40
+    },
 });

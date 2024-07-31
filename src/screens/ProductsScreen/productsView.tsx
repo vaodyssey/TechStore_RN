@@ -1,10 +1,13 @@
 import { useEffect, useState } from "react"
 import { Product } from "../../entities/Product"
 import { API_Products_GetAll } from "../../services/apis/products"
-import { ScrollView, View, StyleSheet, FlatList, ListRenderItemInfo, ListRenderItem } from "react-native"
+import { ScrollView, View, StyleSheet, FlatList, ListRenderItemInfo, ListRenderItem, Dimensions } from "react-native"
 import { ActivityIndicator } from "react-native-paper"
 import ProductCard from "../../components/productCard"
 
+// type ProductsViewProps = {
+//     navigation
+// }
 export default function ProductsView() {
     const [loading, setLoading] = useState(true)
     const [products, setProducts] = useState<Product[]>()
@@ -15,15 +18,10 @@ export default function ProductsView() {
         })
 
     }, [])
-    // const renderItem:ListRenderItem<ProductCard> = (product:ListRenderItemInfo<Produc>) => {
-    //     // <ProductCard image={productData.} name={productData.item.name}
-    //     //     price={productData.item.price.toString()} />
-    //     <Item
-    // }
     return (
         <View>
             {loading ? (
-                <View>
+                <View style={styles.loadingAnim}>
                     <ActivityIndicator size="large" />
                 </View >
             ) : (
@@ -31,33 +29,19 @@ export default function ProductsView() {
                 <FlatList
                     data={products}
                     renderItem={(flatListItem) =>
-                        <ProductCard image={flatListItem.item.image}
-                            name={flatListItem.item.name}
-                            price={flatListItem.item.price} />}
+                        <ProductCard product={flatListItem.item}
+                        />}
                     keyExtractor={(product) => product.id}
                     numColumns={2}
                 />
-
-
             )}
         </View>
     )
 }
+
+const { height: screenHeight } = Dimensions.get('window');
 const styles = StyleSheet.create({
-    scroilView: {
-        flexDirection: 'row',
-        flex: 1,
-
-    }
+    loadingAnim: {
+        marginVertical: screenHeight * 0.32
+    },
 });
-
-
-{
-                        /* {products?.map((product, key) => {
-                        return (
-                            <ProductCard
-                                image={product.image}
-                                name={product.name}
-                                price={"5000"}
-                            />)
-                    })} */}

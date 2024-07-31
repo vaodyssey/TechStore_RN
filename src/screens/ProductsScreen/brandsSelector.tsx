@@ -30,6 +30,7 @@ export default function BrandSelector() {
                             <IconButtonWithURL
                                 url={brand.image}
                                 onPress={() => { console.log('Current brand name: ', brand.name) }}
+                                key={key}
                             />)
                     })}
 
