@@ -54,7 +54,7 @@ function RatingSection() {
     )
 }
 
-const { height: screenHeight } = SCREEN_HEIGHT
+
 const styles = StyleSheet.create({
     price: {
         fontWeight: 'bold',
@@ -62,7 +62,7 @@ const styles = StyleSheet.create({
     },
     description: {
         marginTop: 10,
-        maxHeight: screenHeight * 0.26
+        maxHeight: SCREEN_HEIGHT * 0.26
     },
     stars: {
         marginVertical: 10,

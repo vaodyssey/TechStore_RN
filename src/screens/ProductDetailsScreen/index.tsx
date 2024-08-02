@@ -44,24 +44,32 @@ export default function ProductDetailsScreen() {
                         <ProductDescription
                             productById={productById as ProductById} />
                     </View>
-                    <AddToCartSection />
+                    <View style={styles.addToCartSectionContainer}>
+                        <AddToCartSection />
+                    </View>
                 </View>
             )}
         </View>
     )
 }
 
-const { height: screenHeight } = SCREEN_HEIGHT
+
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
+        flexGrow: 1,
+        flexDirection: 'column',
         justifyContent: 'flex-start',
-        height: screenHeight
+        height: SCREEN_HEIGHT
     },
     loadingAnim: {
-        marginVertical: screenHeight * 0.34
+        marginVertical: SCREEN_HEIGHT * 0.34
     },
     description: {
         margin: 15
+    },
+    addToCartSectionContainer: {
+        position: "absolute",
+        top:SCREEN_HEIGHT-140
+
     }
 });

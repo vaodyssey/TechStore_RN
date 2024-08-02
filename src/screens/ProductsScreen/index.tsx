@@ -41,10 +41,11 @@ export default function ProductsScreen() {
     )
 }
 
-const { height: screenHeight } = SCREEN_HEIGHT
+
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        flexDirection:'column',
         justifyContent: 'flex-start',
     },
     brandSelector: {
@@ -52,6 +53,6 @@ const styles = StyleSheet.create({
     },
     productsView: {
         paddingHorizontal: 10,
-        height: screenHeight *0.8
+        height: SCREEN_HEIGHT *0.75
     },    
 });
