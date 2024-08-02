@@ -8,7 +8,7 @@ import { useEffect, useState } from "react";
 import { API_Products_GetById } from "../../services/apis/products";
 import { ProductById } from "../../entities/ProductById";
 import { ActivityIndicator } from "react-native-paper";
-import { SCREEN_HEIGHT } from "../../constants/screens";
+import { SCREEN_HEIGHT, SCREEN_WIDTH } from '../../constants/screens';
 import ProductDescription from "./description";
 import AddToCartSection from "./addToCart";
 
@@ -38,7 +38,8 @@ export default function ProductDetailsScreen() {
             ) : (
                 <View>
                     <ImageViewer
-                        height={300}
+                            height={300}
+                            width={SCREEN_WIDTH}
                         url={productById?.image as string} />
                     <View style={styles.description}>
                         <ProductDescription
