@@ -1,11 +1,14 @@
 import { GET_ALL_PRODUCTS_ENDPOINT } from "../../constants/url"
 import { Product } from "../../entities/Product"
 import { ProductById } from "../../entities/ProductById"
+import { SearchParams } from "../../entities/SearchParams"
 
 
-export async function API_Products_GetAll(): Promise<Product[]> {
+
+export async function API_Products_GetAll(params: SearchParams): Promise<Product[]> {
     try {
-        const response = await fetch(GET_ALL_PRODUCTS_ENDPOINT, {
+        const PARAM_LIST = BuildGetAllParams(params)
+        const response = await fetch(GET_ALL_PRODUCTS_ENDPOINT + PARAM_LIST, {
             method: 'GET',
             headers: {
                 Accept: 'application/json',
@@ -20,6 +23,11 @@ export async function API_Products_GetAll(): Promise<Product[]> {
     }
 }
 
+function BuildGetAllParams(params: SearchParams): string {
+    let result = ''
+    if (params.keyword != '') result += `?searchTerm=${params.keyword}`
+    return result
+}
 
 export async function API_Products_GetById(id: string): Promise<ProductById> {
     try {

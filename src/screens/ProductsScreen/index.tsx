@@ -1,12 +1,19 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { View, StyleSheet, Alert, BackHandler, AlertButton } from "react-native";
 import BrandSelector from "./brandsSelector";
 import { containerStyles } from "../../components/styles";
-import ProductsView from "./productsView";
-import { NavigationProp, ParamListBase } from "@react-navigation/native";
+import ProductsView, { ProductsViewRef } from './productsView';
 import { SCREEN_HEIGHT } from "../../constants/screens";
+import { Appbar } from "react-native-paper";
+import AllProductsAppBar from "./appBar";
+import { SearchParams } from "../../entities/SearchParams";
 
-export default function ProductsScreen() {    
+
+export default function ProductsScreen() {
+    const productsViewRef = useRef<ProductsViewRef>(null)    
+    const performSearch = (searchParams:SearchParams) => {        
+        productsViewRef.current?.refreshList(searchParams);
+    }
     useEffect(() => {
         const backAction = () => {
             Alert.alert('Hold on!', 'Are you sure you want to exit the app?', [
@@ -30,12 +37,13 @@ export default function ProductsScreen() {
 
     return (
         <View style={styles.container}>
+            <AllProductsAppBar performSearch={performSearch} />
             <View style={styles.brandSelector}>
                 <BrandSelector />
             </View>
             <View style={styles.productsView}>
-                <ProductsView />
-            </View>            
+                <ProductsView ref={productsViewRef} />
+            </View>
         </View>
 
     )
@@ -45,7 +53,7 @@ export default function ProductsScreen() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        flexDirection:'column',
+        flexDirection: 'column',
         justifyContent: 'flex-start',
     },
     brandSelector: {
@@ -53,6 +61,6 @@ const styles = StyleSheet.create({
     },
     productsView: {
         paddingHorizontal: 10,
-        height: SCREEN_HEIGHT *0.75
-    },    
+        height: SCREEN_HEIGHT * 0.75
+    },
 });

@@ -38,15 +38,15 @@ export default function ProductDetailsScreen() {
             ) : (
                 <View>
                     <ImageViewer
-                            height={300}
-                            width={SCREEN_WIDTH}
+                        height={300}
+                        width={SCREEN_WIDTH}
                         url={productById?.image as string} />
                     <View style={styles.description}>
                         <ProductDescription
                             productById={productById as ProductById} />
                     </View>
                     <View style={styles.addToCartSectionContainer}>
-                        <AddToCartSection />
+                        <AddToCartSection productId={productById?.id as string} />
                     </View>
                 </View>
             )}
@@ -70,7 +70,7 @@ const styles = StyleSheet.create({
     },
     addToCartSectionContainer: {
         position: "absolute",
-        top:SCREEN_HEIGHT-140
+        top: SCREEN_HEIGHT - 140
 
     }
 });

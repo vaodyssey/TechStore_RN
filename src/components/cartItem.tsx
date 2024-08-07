@@ -23,8 +23,10 @@ export default function CartItem({ productById }: CartItemProps) {
     }
 
     return (
-        <View style={styles.container} onTouchEnd={toProductDetailsPage}>
-            <ImageViewer height={200} width={180} url={productById.image} />
+        <View style={styles.container}>
+            <View onTouchEnd={toProductDetailsPage}>
+                <ImageViewer height={200} width={180} url={productById.image} />
+            </View>
             <View style={styles.detailsContainer}>
                 <Text variant="titleMedium" style={styles.title}
                     numberOfLines={2}

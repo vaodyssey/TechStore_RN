@@ -1,23 +1,38 @@
-import { useEffect, useState } from "react"
+import { forwardRef, useEffect, useImperativeHandle, useState } from "react"
 import { Product } from "../../entities/Product"
 import { API_Products_GetAll } from "../../services/apis/products"
 import { ScrollView, View, StyleSheet, FlatList, ListRenderItemInfo, ListRenderItem, Dimensions } from "react-native"
 import { ActivityIndicator } from "react-native-paper"
 import ProductCard from "../../components/productCard"
+import { SearchParams } from "../../entities/SearchParams"
 
-// type ProductsViewProps = {
-//     navigation
-// }
-export default function ProductsView() {
+type ProductsViewProps = {
+
+}
+export interface ProductsViewRef {
+    refreshList: (searchParams: SearchParams) => void;
+}
+const ProductsView = forwardRef<ProductsViewRef, ProductsViewProps>((props, ref) => {
     const [loading, setLoading] = useState(true)
     const [products, setProducts] = useState<Product[]>()
+    const defaultSearchParams: SearchParams = {
+        keyword: ''
+    }
     useEffect(() => {
-        API_Products_GetAll().then((productsResponse) => {
+        refreshList(defaultSearchParams)
+    }, [])
+    useImperativeHandle(ref, () => ({
+        refreshList: (searchParams: SearchParams) => {
+            refreshList(searchParams)
+        }
+    }));
+    const refreshList = (searchParams: SearchParams) => {
+        setLoading(true)
+        API_Products_GetAll(searchParams).then((productsResponse) => {            
             setProducts(productsResponse)
             setLoading(false)
         })
-
-    }, [])
+    }
     return (
         <View>
             {loading ? (
@@ -37,7 +52,9 @@ export default function ProductsView() {
             )}
         </View>
     )
-}
+})
+
+export default ProductsView
 
 const { height: screenHeight } = Dimensions.get('window');
 const styles = StyleSheet.create({

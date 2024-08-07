@@ -4,22 +4,32 @@ import { ActivityIndicator, Text } from "react-native-paper";
 import { API_Products_GetById } from "../../services/apis/products";
 import { SCREEN_HEIGHT } from "../../constants/screens";
 import { ProductById } from "../../entities/ProductById";
-import CartItem from "../../components/cartItem";
 import Checkout from "./checkout";
+import { SQLite_GetAllProductsFromCart, SQLite_OpenConnection } from "../../utils/DbUtils";
+import { ItemInCart } from "../../entities/CartItem";
+import CartItem from "../../components/cartItem";
 
 export default function CartScreen() {
     const [loading, setLoading] = useState(true)
     const [productByIdList, setProductByIdList] = useState<ProductById[]>()
-
-    const LoadAllProductsByListOfIds = () => {
+    const [cartItems, setCartItems] = useState<ItemInCart[]>();
+    const GetProducts = async () => {
+        await GetCartItems()
+        await FetchProductsByCartItems()
+    }
+    const GetCartItems = async () => {
+        SQLite_OpenConnection().then((db) => {
+            SQLite_GetAllProductsFromCart(db)
+                .then((result) => {
+                    setCartItems(result)
+                })
+        });
+    }
+    const FetchProductsByCartItems = async () => {
         try {
-            const productIdList = ["6825cac4-d8e6-4208-a902-d4533c2023e6",
-                "f737a92c-d0ea-4c6a-8365-c4714323262f",
-                "6825cac4-d8e6-4208-a902-d4533c2023e6",
-                "f737a92c-d0ea-4c6a-8365-c4714323262f"]
             const promises = [] as Promise<ProductById>[]
-            productIdList.map((productId) => {
-                const promise = API_Products_GetById(productId);
+            cartItems?.map((cartItem) => {
+                const promise = API_Products_GetById(cartItem.id);
                 promises.push(promise)
             })
             Promise.all(promises).then((result) => {
@@ -32,7 +42,7 @@ export default function CartScreen() {
         }
     }
     useEffect(() => {
-        LoadAllProductsByListOfIds()
+        GetProducts()
     }, [])
     return (
         <View>
@@ -50,10 +60,10 @@ export default function CartScreen() {
                             />}
                         keyExtractor={(product) => product.id}
                         numColumns={1}
-                        />
-                        <View style={styles.checkoutContainer}>
-                            <Checkout />
-                        </View>
+                    />
+                    <View style={styles.checkoutContainer}>
+                        <Checkout />
+                    </View>
                 </View>
             )}
         </View>)

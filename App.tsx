@@ -1,6 +1,6 @@
 if (__DEV__) require('react-native-devsettings');
 import { StatusBar } from 'expo-status-bar';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Button, Alert, StyleSheet, Text, View, SafeAreaView, } from 'react-native';
 import "react-native-devsettings";
 import Ionicons from 'react-native-vector-icons/Ionicons'
@@ -14,10 +14,20 @@ import ProductsScreen from './src/screens/ProductsScreen/index';
 import CartScreen from './src/screens/CartScreen';
 import UserScreen from './src/screens/UserScreen';
 import { DARK_BLUE, LIGHT_BLUE } from './src/constants/colors';
+import { SQLite_AddItemToCart, SQLite_CreateTables, SQLite_DropTables, SQLite_OpenConnection } from './src/utils/DbUtils';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
+
+
 export default function App() {
+  const loadData = async () => {
+    const db = await SQLite_OpenConnection()
+    await SQLite_CreateTables(db);
+  }
+  useEffect(() => {
+    loadData()
+  }, [loadData])
   return (
     <PaperProvider>
       <NavigationContainer>
@@ -75,7 +85,8 @@ function HomeTabs() {
 
     >
       <Tab.Screen name="allProducts" component={ProductsScreen} options={{
-        title: 'Products',
+        headerShown: false,
+        title: 'All Products'
       }} />
       <Tab.Screen name="cart" component={CartScreen} options={{
         title: 'My Cart',
