@@ -10,25 +10,20 @@ type ProductsViewProps = {
 
 }
 export interface ProductsViewRef {
-    refreshList: (searchParams: SearchParams) => void;
+    refreshList: () => void;
 }
 const ProductsView = forwardRef<ProductsViewRef, ProductsViewProps>((props, ref) => {
     const [loading, setLoading] = useState(true)
     const [products, setProducts] = useState<Product[]>()
-    const defaultSearchParams: SearchParams = {
-        keyword: ''
-    }
     useEffect(() => {
-        refreshList(defaultSearchParams)
+        refreshList()
     }, [])
     useImperativeHandle(ref, () => ({
-        refreshList: (searchParams: SearchParams) => {
-            refreshList(searchParams)
-        }
+        refreshList: refreshList
     }));
-    const refreshList = (searchParams: SearchParams) => {
+    const refreshList = () => {
         setLoading(true)
-        API_Products_GetAll(searchParams).then((productsResponse) => {            
+        API_Products_GetAll().then((productsResponse) => {
             setProducts(productsResponse)
             setLoading(false)
         })

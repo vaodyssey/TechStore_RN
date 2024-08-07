@@ -1,13 +1,16 @@
+import { useSelector } from "react-redux"
 import { GET_ALL_PRODUCTS_ENDPOINT } from "../../constants/url"
 import { Product } from "../../entities/Product"
 import { ProductById } from "../../entities/ProductById"
 import { SearchParams } from "../../entities/SearchParams"
+import store, { RootState } from "../../redux/store"
 
 
 
-export async function API_Products_GetAll(params: SearchParams): Promise<Product[]> {
+export async function API_Products_GetAll(): Promise<Product[]> {
     try {
-        const PARAM_LIST = BuildGetAllParams(params)
+        const state: RootState = store.getState()
+        const PARAM_LIST = BuildGetAllParams(state.search)
         const response = await fetch(GET_ALL_PRODUCTS_ENDPOINT + PARAM_LIST, {
             method: 'GET',
             headers: {
@@ -25,6 +28,7 @@ export async function API_Products_GetAll(params: SearchParams): Promise<Product
 
 function BuildGetAllParams(params: SearchParams): string {
     let result = ''
+    console.log('BuldGetAllPar - Keyword: ', params.keyword)
     if (params.keyword != '') result += `?searchTerm=${params.keyword}`
     return result
 }

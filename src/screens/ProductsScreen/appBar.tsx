@@ -3,14 +3,19 @@ import { StyleSheet, View } from "react-native";
 import { Appbar, Icon, MD3Colors, Searchbar } from "react-native-paper";
 import { SCREEN_WIDTH } from "../../constants/screens";
 import { SearchParams } from '../../entities/SearchParams';
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../../redux/store";
+import { setKeyword } from "../../redux/searchSlice";
 
 type AllProductsAppBarProps = {
     performSearch: (searchParams: SearchParams) => void;
 }
 export default function AllProductsAppBar({ performSearch }: AllProductsAppBarProps) {
     const [isSearchBarVisible, setIsSearchBarVisible] = useState<boolean>(false);
-    const [keyword, setKeyword] = useState<string>('')
+    // const [keyword, setKeyword] = useState<string>('')
     const [searchParams, setSearchParams] = useState<SearchParams>()
+    const keyword = useSelector((state: RootState) => state.search.keyword)
+    const dispatch = useDispatch();
     return (
         <Appbar.Header>
             <Appbar.Content title="All Products" />
@@ -18,12 +23,7 @@ export default function AllProductsAppBar({ performSearch }: AllProductsAppBarPr
                 <Searchbar
                     placeholder="Search"
                     onChangeText={(keyword) => {
-                        setKeyword(keyword)
-                        setSearchParams(prevSearchParams => ({
-                            ...prevSearchParams,
-                            keyword: keyword
-
-                        }))
+                        dispatch(setKeyword(keyword))
                     }}
                     value={keyword}
                     style={styles.searchBar}

@@ -15,6 +15,8 @@ import CartScreen from './src/screens/CartScreen';
 import UserScreen from './src/screens/UserScreen';
 import { DARK_BLUE, LIGHT_BLUE } from './src/constants/colors';
 import { SQLite_AddItemToCart, SQLite_CreateTables, SQLite_DropTables, SQLite_OpenConnection } from './src/utils/DbUtils';
+import { Provider } from 'react-redux';
+import store from './src/redux/store';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -29,6 +31,7 @@ export default function App() {
     loadData()
   }, [loadData])
   return (
+    <Provider store={store}>
     <PaperProvider>
       <NavigationContainer>
         <Stack.Navigator>
@@ -53,7 +56,8 @@ export default function App() {
           />
         </Stack.Navigator>
       </NavigationContainer>
-    </PaperProvider>
+      </PaperProvider>
+    </Provider>
   );
 }
 

@@ -10,9 +10,9 @@ import { SearchParams } from "../../entities/SearchParams";
 
 
 export default function ProductsScreen() {
-    const productsViewRef = useRef<ProductsViewRef>(null)    
-    const performSearch = (searchParams:SearchParams) => {        
-        productsViewRef.current?.refreshList(searchParams);
+    const productsViewRef = useRef<ProductsViewRef>(null)
+    const performSearch = () => {
+        productsViewRef.current?.refreshList();
     }
     useEffect(() => {
         const backAction = () => {
