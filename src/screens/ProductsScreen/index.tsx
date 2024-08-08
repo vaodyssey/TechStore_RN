@@ -5,8 +5,8 @@ import { containerStyles } from "../../components/styles";
 import ProductsView, { ProductsViewRef } from './productsView';
 import { SCREEN_HEIGHT } from "../../constants/screens";
 import { Appbar } from "react-native-paper";
-import AllProductsHeader from "./header";
-import { SearchParams } from "../../entities/SearchParams";
+import Header from "./header";
+
 
 
 export default function ProductsScreen() {
@@ -37,9 +37,9 @@ export default function ProductsScreen() {
 
     return (
         <View style={styles.container}>
-            <AllProductsHeader refreshList={refreshList} />
+            <Header refreshList={refreshList} />
             <View style={styles.brandSelector}>
-                <BrandSelector />
+                <BrandSelector refreshList={refreshList} />
             </View>
             <View style={styles.productsView}>
                 <ProductsView ref={productsViewRef} />

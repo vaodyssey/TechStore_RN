@@ -6,25 +6,26 @@ import { SearchParams } from '../../entities/SearchParams';
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
 import { setKeyword } from "../../redux/searchSlice";
+import FilterModal from "../../components/filterModal";
+import SortModal from "../../components/sortModal";
 
 
-type AllProductsHeaderProps = {
+type HeaderProps = {
     refreshList: () => void;
 }
-export default function AllProductsHeader({ refreshList }: AllProductsHeaderProps) {
+export default function Header({ refreshList }: HeaderProps) {
     return (
         <View>
             <AppBar refreshList={refreshList} />
-            <FilterSortSection />
-
+            <FilterSortSection refreshList={refreshList} />
         </View>
     )
 }
 
 
-function AppBar({ refreshList }: AllProductsHeaderProps) {
+function AppBar({ refreshList }: HeaderProps) {
     const [isSearchBarVisible, setIsSearchBarVisible] = useState<boolean>(false);
-    const keyword = useSelector((state: RootState) => state.search.keyword)
+    const keyword = useSelector((state: RootState) => state.search.searchTerm)
     const dispatch = useDispatch();
     return (
         <Appbar.Header>
@@ -48,7 +49,7 @@ function AppBar({ refreshList }: AllProductsHeaderProps) {
     )
 }
 
-function FilterSortSection() {
+function FilterSortSection({ refreshList }: HeaderProps) {
     const [value, setValue] = useState<string>('')
     const [sortVisible, setSortVisible] = useState(false);
     const [filterVisible, setFilterVisible] = useState(false);
@@ -81,10 +82,11 @@ function FilterSortSection() {
                 ]}
             />
             {filterVisible ? (
-                <FilterModal isVisible={filterVisible} hideModal={hideFilterModal} />
+                <FilterModal isVisible={filterVisible} hideModal={hideFilterModal}
+                    refreshList={refreshList} />
             ) : (<View></View>)}
             {sortVisible ? (
-                <SortModal isVisible={sortVisible} hideModal={hideSortModal} />
+                <SortModal isVisible={sortVisible} hideModal={hideSortModal} refreshList={refreshList} />
             ) : (<View></View>)}
 
         </View>
@@ -93,37 +95,10 @@ function FilterSortSection() {
 
 
 
-type FilterModalProps = {
-    isVisible: boolean
-    hideModal: () => void
-}
-function FilterModal({ isVisible, hideModal }: FilterModalProps) {
-    return (
-        <Portal>
-            <Modal visible={isVisible} onDismiss={hideModal}
-                contentContainerStyle={styles.modalContainer}>
-                <Text>Example Filter Modal.</Text>
-            </Modal>
-        </Portal>
-    )
 
-}
 
-type SortModalProps = {
-    isVisible: boolean
-    hideModal: () => void
-}
-function SortModal({ isVisible, hideModal }: SortModalProps) {
-    return (
-        <Portal>
-            <Modal visible={isVisible} onDismiss={hideModal}
-                contentContainerStyle={styles.modalContainer}>
-                <Text>Example Sort Modal.</Text>
-            </Modal>
-        </Portal>
-    )
 
-}
+
 const styles = StyleSheet.create({
     searchBar: {
         width: SCREEN_WIDTH * 0.8

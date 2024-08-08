@@ -4,8 +4,10 @@ import { SearchParams } from '../entities/SearchParams';
 
 
 const initialState: SearchParams = {
-    keyword: '',
-    brandName:'',
+    searchTerm: '',
+    label: '',
+    sortBy: '',
+    sortOrder: '',
 };
 
 const searchSlice = createSlice({
@@ -13,17 +15,25 @@ const searchSlice = createSlice({
     initialState,
     reducers: {
         setKeyword(state, action: PayloadAction<string>) {
-            state.keyword = action.payload;
+            state.searchTerm = action.payload;
         },
         setBrandName(state, action: PayloadAction<string>) {
-            state.brandName = action.payload;
+            state.label = action.payload;
+        },
+        setSortBy(state, action: PayloadAction<string>) {
+            state.sortBy = action.payload;
+        },
+        setSortOrder(state, action: PayloadAction<string>) {
+            state.sortOrder = action.payload;
         },
         resetSearch(state) {
-            state.keyword = initialState.keyword;
-            state.brandName = initialState.brandName;
+            state.searchTerm = initialState.searchTerm;
+            state.label = initialState.label;
+            state.sortBy = initialState.sortBy;
+            state.sortOrder = initialState.sortOrder;
         }
     },
 });
 
-export const { setKeyword, setBrandName,resetSearch } = searchSlice.actions;
+export const { setKeyword, setBrandName, setSortBy, setSortOrder, resetSearch } = searchSlice.actions;
 export default searchSlice.reducer;
