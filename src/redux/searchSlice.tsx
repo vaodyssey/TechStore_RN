@@ -4,7 +4,8 @@ import { SearchParams } from '../entities/SearchParams';
 
 
 const initialState: SearchParams = {
-    keyword: ''
+    keyword: '',
+    brandName:'',
 };
 
 const searchSlice = createSlice({
@@ -14,11 +15,15 @@ const searchSlice = createSlice({
         setKeyword(state, action: PayloadAction<string>) {
             state.keyword = action.payload;
         },
+        setBrandName(state, action: PayloadAction<string>) {
+            state.brandName = action.payload;
+        },
         resetSearch(state) {
             state.keyword = initialState.keyword;
+            state.brandName = initialState.brandName;
         }
     },
 });
 
-export const { setKeyword, resetSearch } = searchSlice.actions;
+export const { setKeyword, setBrandName,resetSearch } = searchSlice.actions;
 export default searchSlice.reducer;

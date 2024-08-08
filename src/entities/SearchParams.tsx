@@ -1,3 +1,4 @@
 export type SearchParams = {
-    keyword: string
+    keyword: string,
+    brandName: string
 }

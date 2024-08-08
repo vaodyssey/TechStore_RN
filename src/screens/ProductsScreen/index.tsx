@@ -5,13 +5,13 @@ import { containerStyles } from "../../components/styles";
 import ProductsView, { ProductsViewRef } from './productsView';
 import { SCREEN_HEIGHT } from "../../constants/screens";
 import { Appbar } from "react-native-paper";
-import AllProductsAppBar from "./appBar";
+import AllProductsHeader from "./header";
 import { SearchParams } from "../../entities/SearchParams";
 
 
 export default function ProductsScreen() {
     const productsViewRef = useRef<ProductsViewRef>(null)
-    const performSearch = () => {
+    const refreshList = () => {
         productsViewRef.current?.refreshList();
     }
     useEffect(() => {
@@ -37,7 +37,7 @@ export default function ProductsScreen() {
 
     return (
         <View style={styles.container}>
-            <AllProductsAppBar performSearch={performSearch} />
+            <AllProductsHeader refreshList={refreshList} />
             <View style={styles.brandSelector}>
                 <BrandSelector />
             </View>
@@ -61,6 +61,6 @@ const styles = StyleSheet.create({
     },
     productsView: {
         paddingHorizontal: 10,
-        height: SCREEN_HEIGHT * 0.75
+        height: SCREEN_HEIGHT * 0.7
     },
 });
