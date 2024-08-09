@@ -3,4 +3,6 @@ export type SearchParams = {
     label: string,
     sortBy: string,
     sortOrder: string,
+    minPrice: string,
+    maxPrice: string
 }

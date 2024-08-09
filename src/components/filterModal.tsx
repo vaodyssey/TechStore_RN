@@ -4,13 +4,23 @@ import { ScrollView, StyleSheet } from "react-native"
 import { PRICE_RANGES } from "../constants/text"
 import { PriceRange } from '../entities/PriceRange';
 import { SCREEN_HEIGHT } from "@gorhom/bottom-sheet";
+import { useDispatch } from "react-redux";
+import { setMaxPrice, setMinPrice } from "../redux/searchSlice";
 
 type FilterModalProps = {
     isVisible: boolean
     hideModal: () => void
     refreshList: () => void
 }
-export default function FilterModal({ isVisible, hideModal }: FilterModalProps) {
+export default function FilterModal({ isVisible, hideModal, refreshList }: FilterModalProps) {
+    const dispatch = useDispatch()
+
+    const applyPriceFilter = (range: number[]) => {
+        dispatch(setMinPrice(range[0].toString()))
+        dispatch(setMaxPrice(range[1].toString()))
+        hideModal()
+        refreshList()
+    }
     return (
         <Portal>
             <Modal visible={isVisible} onDismiss={hideModal}
@@ -23,7 +33,7 @@ export default function FilterModal({ isVisible, hideModal }: FilterModalProps) 
                                 key={key}
                                 icon="cash"
                                 style={styles.priceChip}
-                                onPress={() => console.log(priceRange.rangeInt)}>{priceRange.label}</Chip>
+                                onPress={() => applyPriceFilter(priceRange.rangeInt)}>{priceRange.label}</Chip>
 
                         )
                     })}
@@ -44,11 +54,11 @@ const styles = StyleSheet.create({
     },
     priceScrollView: {
         marginVertical: 10,
-        height: SCREEN_HEIGHT * 0.12
+        height: SCREEN_HEIGHT * 0.18
     },
     modalContainer: { backgroundColor: 'white', padding: 20, margin: 20, borderRadius: 20 },
     priceChip: {
-        marginVertical: 3
+        marginVertical: 5
     }
 
 

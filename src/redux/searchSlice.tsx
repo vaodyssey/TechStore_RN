@@ -8,6 +8,8 @@ const initialState: SearchParams = {
     label: '',
     sortBy: '',
     sortOrder: '',
+    minPrice: '',
+    maxPrice: ''
 };
 
 const searchSlice = createSlice({
@@ -26,14 +28,24 @@ const searchSlice = createSlice({
         setSortOrder(state, action: PayloadAction<string>) {
             state.sortOrder = action.payload;
         },
+        setMinPrice(state, action: PayloadAction<string>) {
+            state.minPrice = action.payload;
+        },
+        setMaxPrice(state, action: PayloadAction<string>) {
+            state.maxPrice = action.payload;
+        },
         resetSearch(state) {
             state.searchTerm = initialState.searchTerm;
             state.label = initialState.label;
             state.sortBy = initialState.sortBy;
             state.sortOrder = initialState.sortOrder;
+            state.minPrice = initialState.minPrice;
+            state.maxPrice = initialState.maxPrice;
         }
     },
 });
 
-export const { setKeyword, setBrandName, setSortBy, setSortOrder, resetSearch } = searchSlice.actions;
+export const { setKeyword, setBrandName,
+    setSortBy, setSortOrder, setMinPrice, setMaxPrice,
+    resetSearch } = searchSlice.actions;
 export default searchSlice.reducer;

@@ -5,6 +5,8 @@ import { ScrollView, View, StyleSheet, FlatList, ListRenderItemInfo, ListRenderI
 import { ActivityIndicator } from "react-native-paper"
 import ProductCard from "../../components/productCard"
 import { SearchParams } from "../../entities/SearchParams"
+import { useDispatch } from "react-redux"
+import { resetSearch } from "../../redux/searchSlice"
 
 type ProductsViewProps = {
 
@@ -13,47 +15,39 @@ export interface ProductsViewRef {
     refreshList: () => void;
 }
 const ProductsView = forwardRef<ProductsViewRef, ProductsViewProps>((props, ref) => {
-    const [loading, setLoading] = useState(true)
     const [products, setProducts] = useState<Product[]>()
+    const [refreshing, setRefreshing] = useState(true);
+    const dispatch = useDispatch()
     useEffect(() => {
-        refreshList()
-    }, [])
+        if (refreshing) refreshList()
+    }, [refreshing])
     useImperativeHandle(ref, () => ({
         refreshList: refreshList
     }));
+    const onPullRefresh = () => {
+        dispatch(resetSearch())
+        setRefreshing(true)
+    }
     const refreshList = () => {
-        setLoading(true)
         API_Products_GetAll().then((productsResponse) => {
             setProducts(productsResponse)
-            setLoading(false)
+            setRefreshing(false)
         })
     }
     return (
         <View>
-            {loading ? (
-                <View style={styles.loadingAnim}>
-                    <ActivityIndicator size="large" />
-                </View >
-            ) : (
-
-                <FlatList
-                    data={products}
-                    renderItem={(flatListItem) =>
-                        <ProductCard product={flatListItem.item}
-                        />}
-                    keyExtractor={(product) => product.id}
-                    numColumns={2}
-                />
-            )}
+            <FlatList
+                data={products}
+                renderItem={(flatListItem) =>
+                    <ProductCard product={flatListItem.item}
+                    />}
+                refreshing={refreshing}
+                onRefresh={onPullRefresh}
+                keyExtractor={(product) => product.id}
+                numColumns={2}
+            />
         </View>
     )
 })
 
 export default ProductsView
-
-const { height: screenHeight } = Dimensions.get('window');
-const styles = StyleSheet.create({
-    loadingAnim: {
-        marginVertical: screenHeight * 0.32
-    },
-});
