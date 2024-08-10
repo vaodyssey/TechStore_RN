@@ -12,31 +12,31 @@ import CartItem from "../../components/cartItem";
 export default function CartScreen() {
     const [loading, setLoading] = useState(true)
     const [productByIdList, setProductByIdList] = useState<ProductById[]>()
-    const [cartItems, setCartItems] = useState<ItemInCart[]>();
+
     const GetProducts = async () => {
-        await GetCartItems()
-        await FetchProductsByCartItems()
+        GetCartItems().then((cartItems) => {
+            FetchProductsByCartItems(cartItems).then((productByIds) => {
+                setProductByIdList(productByIds)
+                setLoading(false)
+            })
+        })
     }
-    const GetCartItems = async () => {
-        SQLite_OpenConnection().then((db) => {
-            SQLite_GetAllProductsFromCart(db)
-                .then((result) => {
-                    setCartItems(result)
-                })
-        });
-    }
-    const FetchProductsByCartItems = async () => {
+    const GetCartItems = async (): Promise<ItemInCart[]> => {
+        const db = await SQLite_OpenConnection()
+        const itemsInCart = await SQLite_GetAllProductsFromCart(db)
+        return itemsInCart
+    };
+
+    const FetchProductsByCartItems = async (cartItems: ItemInCart[]): Promise<ProductById[]> => {
         try {
             const promises = [] as Promise<ProductById>[]
             cartItems?.map((cartItem) => {
                 const promise = API_Products_GetById(cartItem.id);
                 promises.push(promise)
             })
-            Promise.all(promises).then((result) => {
-                setProductByIdList(result)
-                setLoading(false)
-            }
-            )
+            const result = await Promise.all(promises).then((result) => { return result })
+            return result
+
         } catch (error) {
             throw error
         }

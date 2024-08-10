@@ -3,9 +3,9 @@ import ImageViewer from "./imageViewer";
 import { useEffect, useState } from "react";
 import { API_Products_GetById } from "../services/apis/products";
 import { ProductById } from "../entities/ProductById";
-import { ActivityIndicator, Button, Card, Text } from "react-native-paper";
+import { ActivityIndicator, Button, Card, IconButton, Text } from "react-native-paper";
 import { SCREEN_HEIGHT, SCREEN_WIDTH } from "../constants/screens";
-import { DARK_BLUE, LIGHT_BLUE, PALE_WHITE, RED, WHITE } from "../constants/colors";
+import { DARK_BLUE, DARK_RED, LIGHT_BLUE, PALE_WHITE, RED, WHITE } from "../constants/colors";
 import { FormatPriceToVnd } from "../utils/PriceUtils";
 import InputSpinner from "react-native-input-spinner";
 import { NavigationProp, ParamListBase, useNavigation } from "@react-navigation/native";
@@ -25,14 +25,13 @@ export default function CartItem({ productById }: CartItemProps) {
     return (
         <View style={styles.container}>
             <View onTouchEnd={toProductDetailsPage}>
-                <ImageViewer height={200} width={180} url={productById.image} />
+                <ImageViewer height={220} width={180} url={productById.image} />
             </View>
             <View style={styles.detailsContainer}>
                 <Text variant="titleMedium" style={styles.title}
                     numberOfLines={2}
                 >{productById.name}</Text>
                 <Text variant="titleMedium">{FormatPriceToVnd(productById.price)}</Text>
-
                 <InputSpinner
                     style={styles.inputSpinner}
                     max={10}
@@ -45,6 +44,11 @@ export default function CartItem({ productById }: CartItemProps) {
                     fontSize={20}
                     onChange={(num) => setQuantity(num as number)}
                 />
+
+                <Button mode='contained' buttonColor={DARK_RED}
+                    icon='trash-can'>
+                    Remove
+                </Button>
             </View>
         </View>
 
@@ -73,6 +77,5 @@ const styles = StyleSheet.create({
     },
     loadingAnim: {
         marginVertical: SCREEN_HEIGHT * 0.34
-    }
-
+    },
 })
