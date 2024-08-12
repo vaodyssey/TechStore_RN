@@ -1,30 +1,63 @@
 import { StyleSheet, View, ViewBase } from "react-native";
-import { Button, Text } from "react-native-paper";
+import { ActivityIndicator, Button, Text } from "react-native-paper";
 import UserSection from "./userSection";
 import Dashboard from "./dashboard";
 import { DARK_GRAY, DARK_RED, LIGHT_BLUE, LIGHT_GRAY } from "../../constants/colors";
-
+import { useCallback, useEffect, useState } from "react";
+import * as SecureStore from 'expo-secure-store'
+import NotLoggedInSection from "./notLoggedInSection";
+import { NavigationProp, ParamListBase, useFocusEffect, useIsFocused, useNavigation } from "@react-navigation/native";
+import LogoutSection from "./logoutSection";
+import { GetLoginResultFromSecureStore } from "../../utils/UserUtils";
+import { LoginResult } from "../../entities/LoginResult";
 export default function UserScreen() {
+    const [loading, setLoading] = useState<boolean>(true)
+    const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false)
+    const [loginResult, setLoginResult] = useState<LoginResult>()
+    useFocusEffect(useCallback(() => {
+        GetLoginResultFromSecureStore().then((result) => {
+            if (result === null) {
+                console.log('Result is null!')
+                setIsLoggedIn(false)
+            } else {
+                setIsLoggedIn(true)
+                setLoginResult(result)
+            }
+            console.log('Current token: ', result.token)
+
+        }).catch((error) => {
+
+        })
+            .finally(() => setLoading(false))
+
+    }, []))
     return (
         <View style={styles.container}>
-            <View style={styles.contentContainer}>
-                <View style={styles.userSection}>
-                    <UserSection />
+            {loading ? (<View>
+                <ActivityIndicator size="large" />
+            </View>) : (null)}
+            {isLoggedIn ? (
+                <View style={styles.container}>
+                    <View style={styles.contentContainer}>
+                        <View style={styles.userSection}>
+                            <UserSection loginResult={loginResult as LoginResult} />
+                        </View>
+                        <View style={styles.dashboard}>
+                            <Dashboard />
+                        </View>
+                    </View>
+                    <LogoutSection />
                 </View>
-                <Text style={styles.dashboardTxt} variant="titleMedium">Dashboard</Text>
-                <View style={styles.dashboard}>
-                    <Dashboard />
-                </View>
-            </View>
 
-            <Button mode="contained" style={styles.logoutBtn} >
-                Log me out!
-            </Button>
-
-
-        </View>
+            ) : (<View>
+                <NotLoggedInSection />
+            </View>)}
+        </View >
     )
+
 }
+
+
 const styles = StyleSheet.create({
     container: {
         flex: 1
@@ -36,18 +69,10 @@ const styles = StyleSheet.create({
         marginVertical: 40,
         marginHorizontal: 20
     },
-    dashboardTxt: {
-        marginVertical: 2,
-        marginHorizontal: 20,
-        color: DARK_GRAY
-    },
+
     dashboard: {
         marginVertical: 2,
         marginHorizontal: 20
-    },
-    logoutBtn: {
-        margin: 30,
-        backgroundColor:DARK_RED
     }
-    
+
 })

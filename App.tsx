@@ -32,30 +32,30 @@ export default function App() {
   }, [loadData])
   return (
     <Provider store={store}>
-    <PaperProvider>
-      <NavigationContainer>
-        <Stack.Navigator>
-          <Stack.Screen
-            name="Home"
-            component={HomeTabs}
-            options={{
-              headerShown: false
-            }}
-          />
-          <Stack.Screen
-            name="productDetails"
-            component={ProductDetailsScreen}
-            options={{
-              title: 'Product Details',
-            }}
-          />
-          <Stack.Screen
-            name="Login"
-            component={LoginScreen}
-            options={{ headerShown: false }}
-          />
-        </Stack.Navigator>
-      </NavigationContainer>
+      <PaperProvider>
+        <NavigationContainer>
+          <Stack.Navigator>
+            <Stack.Screen
+              name="home"
+              component={HomeTabs}
+              options={{
+                headerShown: false
+              }}
+            />
+            <Stack.Screen
+              name="productDetails"
+              component={ProductDetailsScreen}
+              options={{
+                title: 'Product Details',
+              }}
+            />
+            <Stack.Screen
+              name="login"
+              component={LoginScreen}
+              options={{ headerShown: false }}
+            />
+          </Stack.Navigator>
+        </NavigationContainer>
       </PaperProvider>
     </Provider>
   );
