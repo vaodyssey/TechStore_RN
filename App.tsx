@@ -17,6 +17,8 @@ import { DARK_BLUE, LIGHT_BLUE } from './src/constants/colors';
 import { SQLite_AddItemToCart, SQLite_CreateTables, SQLite_DropTables, SQLite_OpenConnection } from './src/utils/DbUtils';
 import { Provider } from 'react-redux';
 import store from './src/redux/store';
+import { UpdateProfileScreen } from './src/screens/UpdateProfileScreen';
+import OrderScreen from './src/screens/OrderScreen';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -53,6 +55,20 @@ export default function App() {
               name="login"
               component={LoginScreen}
               options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="updateProfile"
+              component={UpdateProfileScreen}
+              options={{
+                title: 'Update Profile',
+              }}
+            />
+            <Stack.Screen
+              name="orders"
+              component={OrderScreen}
+              options={{
+                title: 'Your Orders',
+              }}
             />
           </Stack.Navigator>
         </NavigationContainer>

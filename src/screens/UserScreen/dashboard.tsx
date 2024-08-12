@@ -16,7 +16,9 @@ export default function Dashboard() {
                             <DashboardItem
                                 iconColor={dashboardItem.iconColor}
                                 icon={dashboardItem.icon}
-                                optionName={dashboardItem.optionName} />
+                                optionName={dashboardItem.optionName}
+                                targetScreenName={dashboardItem.destinationScreen}
+                            />
                         </View>
                     )
                 })}

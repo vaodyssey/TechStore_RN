@@ -7,6 +7,7 @@ import { useState } from "react";
 import { blue100 } from "react-native-paper/lib/typescript/styles/themes/v2/colors";
 import { SQLite_AddItemToCart, SQLite_OpenConnection } from '../../utils/DbUtils';
 import { ItemInCart } from "../../entities/CartItem";
+import { showInfoAlert } from "../../utils/alertUtils";
 
 type AddToCartSectionProps = {
     productId: string
@@ -17,13 +18,8 @@ export default function AddToCartSection({ productId }: AddToCartSectionProps) {
         const itemInCart = { id: productId, quantity: quantity } as ItemInCart
         const db = await SQLite_OpenConnection()
         await SQLite_AddItemToCart(db, itemInCart).then(() => {
-            alertAddToCartSuccessful()
+            showInfoAlert('The product is successfully added to the cart.')
         })
-    }
-    const alertAddToCartSuccessful = () => {
-        Alert.alert('Information', 'The product is successfully added to the cart.', [
-            { text: 'OK', onPress: () => null },
-        ]);
     }
     return (
         <View style={styles.container}>

@@ -5,7 +5,9 @@ import { ItemInCart } from '../entities/CartItem';
 
 
 export const SQLite_OpenConnection = async (): Promise<SQLite.SQLiteDatabase> => {
-    return await SQLite.openDatabaseAsync("techStore.db");
+    return await SQLite.openDatabaseAsync("techStore.db", {
+        useNewConnection: true
+    });
 }
 
 export const SQLite_DropTables = async (db: SQLite.SQLiteDatabase) => {

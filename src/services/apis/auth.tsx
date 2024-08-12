@@ -1,11 +1,11 @@
 import { LOGIN_ENDPOINT } from '../../constants/url';
-import { LoginDetails } from '../../entities/LoginDetails';
-export async function API_Login(loginDetails: LoginDetails) {
+import { LoginRequest } from '../../entities/LoginRequest';
+export async function API_Login(LoginRequest: LoginRequest) {
     try {
         const reqBody = JSON.stringify({
             data: {
-                username: loginDetails?.email,
-                password: loginDetails?.password,
+                username: LoginRequest?.email,
+                password: LoginRequest?.password,
             }
         })
         const response = await fetch(LOGIN_ENDPOINT, {

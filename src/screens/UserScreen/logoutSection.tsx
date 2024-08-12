@@ -3,6 +3,7 @@ import { DARK_RED } from "../../constants/colors";
 import { Button } from "react-native-paper";
 import * as SecureStore from 'expo-secure-store'
 import { NavigationProp, ParamListBase, useNavigation } from "@react-navigation/native";
+import { showYesNoAlert } from "../../utils/alertUtils";
 export default function LogoutSection() {
     const navigation: NavigationProp<ParamListBase> = useNavigation()
     const logout = () => {
@@ -11,10 +12,7 @@ export default function LogoutSection() {
         })
     }
     const showConfirmLogoutModal = () => {
-        Alert.alert('Warning', "Do you really want to log out?", [
-            { text: 'Yes', onPress: () => logout() },
-            { text: 'No', onPress: () => null }
-        ])
+        showYesNoAlert("Do you really want to log out?", logout)
     }
     return (
         <View>

@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { View, StyleSheet } from "react-native";
 import { TextInput, Text, Button } from "react-native-paper";
-import { LoginDetails } from "../../entities/LoginDetails";
+import { LoginRequest } from "../../entities/LoginRequest";
 import { Controller, useForm } from "react-hook-form";
 import { RED } from "../../constants/colors";
 type TextInputSectionProps = {
-    handleLogin: (loginDetails: LoginDetails) => void;
+    handleLogin: (loginDetails: LoginRequest) => void;
 }
 export default function TextInputSection({ handleLogin }: TextInputSectionProps) {
     const { control, handleSubmit, formState: { errors }, } = useForm({
@@ -14,7 +14,7 @@ export default function TextInputSection({ handleLogin }: TextInputSectionProps)
             password: ""
         },
     })
-    const onSubmit = (data: LoginDetails) => {
+    const onSubmit = (data: LoginRequest) => {
         handleLogin(data);
 
     }
@@ -27,6 +27,7 @@ export default function TextInputSection({ handleLogin }: TextInputSectionProps)
                 }}
                 render={({ field: { onChange, onBlur, value } }) => (
                     <TextInput
+                        mode='outlined'
                         label="Email"
                         style={styles.input}
                         numberOfLines={1}
@@ -43,6 +44,7 @@ export default function TextInputSection({ handleLogin }: TextInputSectionProps)
                 }}
                 render={({ field: { onChange, onBlur, value } }) => (
                     <TextInput
+                        mode='outlined'
                         label="Password"
                         style={styles.input}
                         numberOfLines={1}
@@ -62,8 +64,7 @@ export default function TextInputSection({ handleLogin }: TextInputSectionProps)
 
 const styles = StyleSheet.create({
     input: {
-        padding: 3,
-        borderWidth: 1,
+        padding: 3,        
         fontSize: 16,
         marginBottom: 30
     },

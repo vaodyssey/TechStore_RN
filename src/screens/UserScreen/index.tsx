@@ -1,6 +1,6 @@
 import { StyleSheet, View, ViewBase } from "react-native";
 import { ActivityIndicator, Button, Text } from "react-native-paper";
-import UserSection from "./userSection";
+import UserSection from "../../components/userSection";
 import Dashboard from "./dashboard";
 import { DARK_GRAY, DARK_RED, LIGHT_BLUE, LIGHT_GRAY } from "../../constants/colors";
 import { useCallback, useEffect, useState } from "react";

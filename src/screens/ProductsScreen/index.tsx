@@ -6,6 +6,7 @@ import ProductsView, { ProductsViewRef } from './productsView';
 import { SCREEN_HEIGHT } from "../../constants/screens";
 import { Appbar } from "react-native-paper";
 import Header from "./header";
+import { showYesNoAlert } from "../../utils/alertUtils";
 
 
 
@@ -16,14 +17,7 @@ export default function ProductsScreen() {
     }
     useEffect(() => {
         const backAction = () => {
-            Alert.alert('Hold on!', 'Are you sure you want to exit the app?', [
-                {
-                    text: 'Cancel',
-                    onPress: () => null,
-                    style: 'cancel',
-                },
-                { text: 'YES', onPress: () => BackHandler.exitApp() },
-            ]);
+            showYesNoAlert("Are you sure you want to exit the app?", BackHandler.exitApp)
             return true;
         };
 
