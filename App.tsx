@@ -19,6 +19,7 @@ import { Provider } from 'react-redux';
 import store from './src/redux/store';
 import { UpdateProfileScreen } from './src/screens/UpdateProfileScreen';
 import OrderScreen from './src/screens/OrderScreen';
+import RegistrationScreen from './src/screens/RegistrationScreen';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -55,6 +56,11 @@ export default function App() {
             <Stack.Screen
               name="login"
               component={LoginScreen}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="register"
+              component={RegistrationScreen}
               options={{ headerShown: false }}
             />
             <Stack.Screen

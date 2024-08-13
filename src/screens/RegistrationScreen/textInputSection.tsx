@@ -1,21 +1,23 @@
-import { useState } from "react";
-import { View, StyleSheet } from "react-native";
-import { TextInput, Text, Button } from "react-native-paper";
-import { LoginRequest } from "../../entities/LoginRequest";
 import { Controller, useForm } from "react-hook-form";
+import { StyleSheet, View } from "react-native";
+import { Button, Text, TextInput } from "react-native-paper";
 import { RED } from "../../constants/colors";
+import { VALID_EMAIL } from "../../constants/regex";
+import { RegistrationRequest } from "../../entities/RegistrationRequest";
+
 type TextInputSectionProps = {
-    handleLogin: (loginDetails: LoginRequest) => void;
+    handleRegistration: (registrationRequest: RegistrationRequest) => void;
 }
-export default function TextInputSection({ handleLogin }: TextInputSectionProps) {
+export default function TextInputSection({ handleRegistration }: TextInputSectionProps) {
     const { control, handleSubmit, formState: { errors }, } = useForm({
         defaultValues: {
-            email: "",
-            password: ""
+            username: "",
+            password: "",
+            email: ""
         },
     })
-    const onSubmit = (data: LoginRequest) => {
-        handleLogin(data);
+    const onSubmit = (data: RegistrationRequest) => {
+        handleRegistration(data);
 
     }
     return (
@@ -29,6 +31,23 @@ export default function TextInputSection({ handleLogin }: TextInputSectionProps)
                     <TextInput
                         mode='outlined'
                         label="Username"
+                        style={styles.input}
+                        numberOfLines={1}
+                        onChangeText={onChange}
+                    />)}
+                name="username"
+            />
+            {errors.email && <Text style={styles.error}>This is required.</Text>}
+            <Controller
+                control={control}
+                rules={{
+                    required: true,
+                    pattern: VALID_EMAIL
+                }}
+                render={({ field: { onChange, onBlur, value } }) => (
+                    <TextInput
+                        mode='outlined'
+                        label="Email"
                         style={styles.input}
                         numberOfLines={1}
                         onChangeText={onChange}
@@ -56,7 +75,7 @@ export default function TextInputSection({ handleLogin }: TextInputSectionProps)
 
             {errors.password && <Text style={styles.error}>This is required.</Text>}
             <View>
-                <Button mode='contained' onPress={handleSubmit(onSubmit)}>Login</Button>
+                <Button mode='contained' onPress={handleSubmit(onSubmit)}>Register</Button>
             </View>
         </View>)
 }
@@ -64,7 +83,7 @@ export default function TextInputSection({ handleLogin }: TextInputSectionProps)
 
 const styles = StyleSheet.create({
     input: {
-        padding: 3,        
+        padding: 3,
         fontSize: 16,
         marginBottom: 30
     },

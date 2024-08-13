@@ -2,25 +2,23 @@ import { NavigationProp, ParamListBase, useNavigation } from "@react-navigation/
 import { useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { ActivityIndicator } from "react-native-paper";
-import { LoginRequest } from "../../entities/LoginRequest";
-import { API_Login } from "../../services/apis/auth";
-import { showInfoAlert } from "../../utils/AlertUtils";
-import { SetLoginResultToSecureStore } from "../../utils/UserUtils";
+import { RegistrationRequest } from '../../entities/RegistrationRequest';
+import { API_Register } from "../../services/apis/auth";
+import { showInfoAlert, showInfoAlertWithAction } from "../../utils/AlertUtils";
 import TextInputSection from "./textInputSection";
 import TextSection from "./textSection";
-import ToRegistrationPageTxt from "./toRegistrationPageTxt";
+import ToLoginPageTxt from "./toLoginPageTxt";
 
-export default function LoginScreen() {
+export default function RegistrationScreen() {
     const [loading, setLoading] = useState(false);
     const navigation: NavigationProp<ParamListBase> = useNavigation()
-    const handleLogin = async (loginDetails: LoginRequest) => {
+    const handleRegistration = async (registrationRequest: RegistrationRequest) => {
         setLoading(true)
-        API_Login(loginDetails).then((response) => {
+
+        API_Register(registrationRequest).then((response) => {
             console.log('Current response: ', response)
             if (response.resultCode == '00') {
-                SetLoginResultToSecureStore(response).then(() => {
-                    navigation.navigate('home')
-                })
+                showInfoAlertWithAction("Successfully registered you as a user!", navigateToLoginScreen)
             } else {
                 showInfoAlert(response.resultMessage)
             }
@@ -31,6 +29,9 @@ export default function LoginScreen() {
             setLoading(false)
         })
 
+    }
+    const navigateToLoginScreen = () => {
+        navigation.navigate('login')
     }
 
     return (
@@ -43,13 +44,11 @@ export default function LoginScreen() {
                 <View>
                     <TextSection />
                     <TextInputSection
-                        handleLogin={handleLogin} />
-                    <View style={styles.toRegistrationPageTxt}>
-                        <ToRegistrationPageTxt />
+                        handleRegistration={handleRegistration} />
+                    <View style={styles.toLoginPageTxt}>
+                        <ToLoginPageTxt />
                     </View>
-                </View>
-
-            )
+                </View>)
 
             }
         </View>
@@ -62,8 +61,7 @@ const styles = StyleSheet.create({
         alignItems: 'stretch',
         padding: 50,
     },
-    toRegistrationPageTxt: {
+    toLoginPageTxt: {
         marginVertical: 15
     }
 });
-
