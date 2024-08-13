@@ -17,8 +17,9 @@ import { ProductWithQuantity } from '../entities/ProductWithQuantity';
 
 type CartItemProps = {
     productWithQuantity: ProductWithQuantity
+    refreshCart: () => void;
 }
-export default function CartItem({ productWithQuantity }: CartItemProps) {
+export default function CartItem({ productWithQuantity, refreshCart }: CartItemProps) {
     const [quantity, setQuantity] = useState<number>(productWithQuantity.quantity);
     const productById = productWithQuantity.productById as ProductById
     const navigation: NavigationProp<ParamListBase> = useNavigation()
@@ -32,8 +33,9 @@ export default function CartItem({ productWithQuantity }: CartItemProps) {
     }
     const deleteByProductId = async () => {
         const db = await SQLite_OpenConnection();
-
-        await CartItemRepository_DeleteByProductId(db, productById.id)
+        CartItemRepository_DeleteByProductId(db, productById.id).then(() => {
+            refreshCart()
+        })
     }
 
     return (

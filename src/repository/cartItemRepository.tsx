@@ -1,5 +1,7 @@
 import * as SQLite from 'expo-sqlite'
 import { ItemInCart } from '../entities/ItemInCart'
+import { GetLoginResultFromSecureStore } from '../utils/UserUtils'
+import { showInfoAlert } from '../utils/AlertUtils'
 export const CartItemRepository_Insert = async (db: SQLite.SQLiteDatabase, itemInCart: ItemInCart) => {
     const query = `
    INSERT INTO cartItems (productid,datetime,cartid)
@@ -44,12 +46,13 @@ export const CartItemRepository_GetAllByProductId = async (db: SQLite.SQLiteData
 }
 
 export const CartItemRepository_GetAll = async (db: SQLite.SQLiteDatabase): Promise<ItemInCart[]> => {
-    const query = `SELECT * FROM cartItems`
+    const loginResult = await GetLoginResultFromSecureStore()
+    const query = `SELECT * FROM cartItems WHERE cartid = ?`
     try {
-        const result = await db.getAllAsync(query) as ItemInCart[]
+        const result = await db.getAllAsync(query, loginResult.userId) as ItemInCart[]
         return result
     } catch (error) {
-        console.error(error)
+        showInfoAlert("It seems that you haven't logged in yet. Please try again to view contents in your cart.")
         throw Error("Failed to get all CartItem in a Cart.")
     }
 }

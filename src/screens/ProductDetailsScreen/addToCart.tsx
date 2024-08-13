@@ -26,7 +26,10 @@ export default function AddToCartSection({ productId }: AddToCartSectionProps) {
         const db = await SQLite_OpenConnection()
         const loginResult = await GetLoginResultFromSecureStore()
         await prepareCart(db, loginResult)
-        await addToCart(db, loginResult)
+        addToCart(db, loginResult).then(() => {
+            showInfoAlert("Successfully added the product into the Cart.")
+        })
+
     }
     const prepareCart = async (db: SQLiteDatabase, loginResult: LoginResult) => {
         const isCartAvailable = await CartRepository_DoesCartExist(db)
@@ -47,9 +50,7 @@ export default function AddToCartSection({ productId }: AddToCartSectionProps) {
                 datetime: GetCurrentDateTimeString(),
                 cartid: loginResult.userId
             }
-            CartItemRepository_Insert(db, itemInCart).then(() => {
-                showInfoAlert("Successfully added the product into the Cart.")
-            })
+            await CartItemRepository_Insert(db, itemInCart)
         }
     }
 

@@ -6,4 +6,5 @@ export const GET_ALL_BRANDS_ENDPOINT = BASE_URL + "/labels";
 export const GET_ALL_PRODUCTS_ENDPOINT = BASE_URL + "/products";
 export const GET_USER_DETAILS = BASE_URL + "/users";
 export const UPDATE_USER_DETAILS = BASE_URL + "/users";
+export const CREATE_ORDER = BASE_URL + "/orders";
 export const API_TIMEOUT = 5000;

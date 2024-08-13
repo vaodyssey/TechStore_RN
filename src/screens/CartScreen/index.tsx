@@ -15,15 +15,15 @@ import { ProductWithQuantity } from '../../entities/ProductWithQuantity';
 export default function CartScreen() {
     const [loading, setLoading] = useState(true)
     const [productWithQuantities, setProductWithQuantities] = useState<ProductWithQuantity[]>()
-
+    const [totalPrice, setTotalPrice] = useState<number>(0)
     const getProducts = async () => {
         const cartItems = await getItemsFromDb()
         const productsWithQuantities = extractProductsWithQuantities(cartItems)
         fetchProductsByProductsWithQuantities(productsWithQuantities).then((productsWithQuantities) => {
             setProductWithQuantities(productsWithQuantities)
+            calculateTotalPrice(productsWithQuantities)
             setLoading(false)
         })
-
     }
     const getItemsFromDb = async (): Promise<ItemInCart[]> => {
         const db = await SQLite_OpenConnection()
@@ -54,6 +54,17 @@ export default function CartScreen() {
             throw error
         }
     }
+
+    const calculateTotalPrice = (prodWithQuantities: ProductWithQuantity[]) => {
+        let total = 0
+        for (const productWithQuantity of prodWithQuantities) {
+            const prodById = productWithQuantity.productById as ProductById
+            const finalPrice = prodById.price * productWithQuantity.quantity
+            total += finalPrice
+        }
+        console.log('total price: ' + total)
+        setTotalPrice(total)
+    }
     useFocusEffect(useCallback(() => {
         getProducts()
     }, []))
@@ -70,12 +81,13 @@ export default function CartScreen() {
                         data={productWithQuantities}
                         renderItem={(flatListItem) =>
                             <CartItem productWithQuantity={flatListItem.item}
+                                refreshCart={getProducts}
                             />}
                         keyExtractor={(productWithQuantity) => productWithQuantity.productid}
                         numColumns={1}
                     />
                     <View style={styles.checkoutContainer}>
-                        <Checkout />
+                        <Checkout totalPrice={totalPrice} productsWithQuantities={productWithQuantities as ProductWithQuantity[]} />
                     </View>
                 </View>
             )}

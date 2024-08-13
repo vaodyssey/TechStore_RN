@@ -1,14 +1,15 @@
 
 
 import { LoginResult } from '../../entities/LoginResult';
-import {  GET_USER_DETAILS, UPDATE_USER_DETAILS } from '../../constants/url';
+import { GET_USER_DETAILS, UPDATE_USER_DETAILS } from '../../constants/url';
 import { User } from '../../entities/User';
 import { GetLoginResultFromSecureStore } from '../../utils/UserUtils';
 import { UpdateUserRequest } from '../../entities/UpdateUserRequest';
-import { UpdateUserResponse } from '../../entities/UpdateUserResponse';
+import { CRUDResponse } from '../../entities/CRUDResponse';
+
 export async function API_User_GetUserDetails(): Promise<User> {
-    try {        
-        const loginResult:LoginResult = await GetLoginResultFromSecureStore()        
+    try {
+        const loginResult: LoginResult = await GetLoginResultFromSecureStore()
         const response = await fetch(GET_USER_DETAILS + `/${loginResult.userId}`, {
             method: 'GET',
             headers: {
@@ -25,7 +26,7 @@ export async function API_User_GetUserDetails(): Promise<User> {
     }
 }
 
-export async function API_User_UpdateDetails(updateUserRequest:UpdateUserRequest): Promise<UpdateUserResponse> {
+export async function API_User_UpdateDetails(updateUserRequest: UpdateUserRequest): Promise<CRUDResponse> {
     try {
         const loginResult: LoginResult = await GetLoginResultFromSecureStore()
         const reqBody = JSON.stringify({
@@ -38,10 +39,10 @@ export async function API_User_UpdateDetails(updateUserRequest:UpdateUserRequest
                 'Content-Type': 'application/json',
                 Authorization: loginResult.token
             },
-            body:reqBody
+            body: reqBody
         })
         const json = await response.json()
-        const updateResult = json as UpdateUserResponse
+        const updateResult = json as CRUDResponse
         return updateResult
     } catch (error) {
         throw error

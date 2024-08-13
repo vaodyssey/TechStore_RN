@@ -27,7 +27,7 @@ const Tab = createBottomTabNavigator();
 export default function App() {
   const loadData = async () => {
     const db = await SQLite_OpenConnection()
-    await SQLite_DropTables(db)
+    // await SQLite_DropTables(db)
     await SQLite_CreateTables(db);
   }
   useEffect(() => {

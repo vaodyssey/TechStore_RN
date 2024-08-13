@@ -2,12 +2,32 @@ import { StyleSheet, View } from "react-native";
 import { SCREEN_HEIGHT, SCREEN_WIDTH } from "../../constants/screens";
 import { DARK_BLUE, DARK_RED, LIGHT_BLUE, PALE_WHITE } from "../../constants/colors";
 import { Button, Text } from "react-native-paper";
+import { FormatPriceToVnd } from "../../utils/PriceUtils";
+import { ProductWithQuantity } from "../../entities/ProductWithQuantity";
+import { showInfoAlert, showYesNoAlert } from '../../utils/AlertUtils';
+import { API_Orders_Create } from "../../services/apis/order";
 
-export default function Checkout() {
+type CheckoutProps = {
+    totalPrice: number
+    productsWithQuantities: ProductWithQuantity[]
+}
+export default function Checkout({ totalPrice, productsWithQuantities }: CheckoutProps) {
+    const handleCheckout = () => {
+        showYesNoAlert('Do you want to proceed with the checkout?', performCheckout)
+    }
+    const performCheckout = () => {
+        API_Orders_Create(productsWithQuantities).then(() => {
+            showInfoAlert('Successfully created an order for you.')
+        }).catch((error) => {
+            showInfoAlert(`Something went wrong. Here is the error: ${error.message}`)
+        })
+    }
     return (
         <View style={styles.container}>
             <View style={styles.priceContainer}>
-                <Text variant="titleLarge" style={styles.price}>Total: 69.000.000 đ</Text>
+                <Text variant="titleLarge" style={styles.price}>
+                    Total: {FormatPriceToVnd(totalPrice)}
+                </Text>
             </View>
             <View style={styles.blankView} />
             <View>
@@ -15,7 +35,8 @@ export default function Checkout() {
                     style={styles.addToCartBtn}
                     icon="cart" mode="contained"
                     buttonColor={DARK_BLUE}
-                    rippleColor={PALE_WHITE}>
+                    rippleColor={PALE_WHITE}
+                    onPress={handleCheckout}>
                     Checkout
                 </Button>
             </View>
@@ -41,7 +62,8 @@ const styles = StyleSheet.create({
         color: DARK_RED
     },
     priceContainer: {
-        justifyContent: "center"
+        justifyContent: "center",
+        alignItems:"flex-start"
     },
     blankView: {
         width: 20
