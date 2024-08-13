@@ -4,6 +4,7 @@ import { Product } from "../../entities/Product"
 import { ProductById } from "../../entities/ProductById"
 import { SearchParams } from "../../entities/SearchParams"
 import store, { RootState } from "../../redux/store"
+import { ProductWithQuantity } from "../../entities/ProductWithQuantity"
 
 
 
@@ -31,8 +32,8 @@ function BuildSearchParams(params: SearchParams): string {
     Object.entries(params)
         .forEach(([key, value]) => {
             if (value != '')
-                result+=`${key}=${value}&`            
-        })   
+                result += `${key}=${value}&`
+        })
     console.log(`result: ${result}`)
     return result
 }
@@ -50,6 +51,25 @@ export async function API_Products_GetById(id: string): Promise<ProductById> {
         const json = await response.json()
         const productById = json['data'] as ProductById
         return productById
+    } catch (error) {
+        throw error
+    }
+}
+
+export async function API_Products_GetByProductWithQuantity(productWithQuantity: ProductWithQuantity): Promise<ProductWithQuantity> {
+    try {
+        const url = `${GET_ALL_PRODUCTS_ENDPOINT}/${productWithQuantity.productid}`
+        const response = await fetch(url, {
+            method: 'GET',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            }
+        })
+        const json = await response.json()
+        const productById = json['data'] as ProductById
+        productWithQuantity.productById = productById
+        return productWithQuantity
     } catch (error) {
         throw error
     }

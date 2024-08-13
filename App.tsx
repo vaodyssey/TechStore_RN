@@ -14,7 +14,7 @@ import ProductsScreen from './src/screens/ProductsScreen/index';
 import CartScreen from './src/screens/CartScreen';
 import UserScreen from './src/screens/UserScreen';
 import { DARK_BLUE, LIGHT_BLUE } from './src/constants/colors';
-import { SQLite_AddItemToCart, SQLite_CreateTables, SQLite_DropTables, SQLite_OpenConnection } from './src/utils/DbUtils';
+import { SQLite_CreateTables, SQLite_DropTables, SQLite_OpenConnection } from './src/repository/SqliteDDL';
 import { Provider } from 'react-redux';
 import store from './src/redux/store';
 import { UpdateProfileScreen } from './src/screens/UpdateProfileScreen';
@@ -27,6 +27,7 @@ const Tab = createBottomTabNavigator();
 export default function App() {
   const loadData = async () => {
     const db = await SQLite_OpenConnection()
+    await SQLite_DropTables(db)
     await SQLite_CreateTables(db);
   }
   useEffect(() => {

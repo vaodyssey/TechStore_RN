@@ -11,7 +11,8 @@ import { NavigationProp, ParamListBase } from "@react-navigation/native";
 import * as SecureStore from 'expo-secure-store'
 import { LoginResult } from "../../entities/LoginResult";
 import { SetLoginResultToSecureStore } from "../../utils/UserUtils";
-import { showInfoAlert } from "../../utils/alertUtils";
+import { showInfoAlert } from "../../utils/AlertUtils";
+
 type LoginScreenProps = {
     navigation: NavigationProp<ParamListBase>
 }

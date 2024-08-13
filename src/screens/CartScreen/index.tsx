@@ -1,37 +1,50 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { FlatList, StyleSheet, View } from "react-native";
 import { ActivityIndicator, Text } from "react-native-paper";
-import { API_Products_GetById } from "../../services/apis/products";
+import { API_Products_GetById, API_Products_GetByProductWithQuantity } from "../../services/apis/products";
 import { SCREEN_HEIGHT } from "../../constants/screens";
 import { ProductById } from "../../entities/ProductById";
 import Checkout from "./checkout";
-import { SQLite_GetAllProductsFromCart, SQLite_OpenConnection } from "../../utils/DbUtils";
-import { ItemInCart } from "../../entities/CartItem";
+import { SQLite_OpenConnection } from "../../repository/SqliteDDL";
+import { ItemInCart } from "../../entities/ItemInCart";
 import CartItem from "../../components/cartItem";
+import { CartItemRepository_GetAll, CartItemRepository_GetAllByProductId } from "../../repository/cartItemRepository";
+import { useFocusEffect } from "@react-navigation/native";
+import { ProductWithQuantity } from '../../entities/ProductWithQuantity';
 
 export default function CartScreen() {
     const [loading, setLoading] = useState(true)
-    const [productByIdList, setProductByIdList] = useState<ProductById[]>()
+    const [productWithQuantities, setProductWithQuantities] = useState<ProductWithQuantity[]>()
 
-    const GetProducts = async () => {
-        GetCartItems().then((cartItems) => {
-            FetchProductsByCartItems(cartItems).then((productByIds) => {
-                setProductByIdList(productByIds)
-                setLoading(false)
-            })
+    const getProducts = async () => {
+        const cartItems = await getItemsFromDb()
+        const productsWithQuantities = extractProductsWithQuantities(cartItems)
+        fetchProductsByProductsWithQuantities(productsWithQuantities).then((productsWithQuantities) => {
+            setProductWithQuantities(productsWithQuantities)
+            setLoading(false)
         })
+
     }
-    const GetCartItems = async (): Promise<ItemInCart[]> => {
+    const getItemsFromDb = async (): Promise<ItemInCart[]> => {
         const db = await SQLite_OpenConnection()
-        const itemsInCart = await SQLite_GetAllProductsFromCart(db)
+        const itemsInCart = await CartItemRepository_GetAll(db)
         return itemsInCart
     };
+    const extractProductsWithQuantities = (itemsInCart: ItemInCart[]): ProductWithQuantity[] => {
+        const productIdSet = [...new Set(itemsInCart.map(item => item.productid))];
+        const result = [] as ProductWithQuantity[]
+        for (const productId of productIdSet) {
+            const productIdCount = itemsInCart.filter((item) => item.productid == productId).length
+            result.push({ productid: productId, quantity: productIdCount, productById: undefined })
+        }
+        return result
+    }
 
-    const FetchProductsByCartItems = async (cartItems: ItemInCart[]): Promise<ProductById[]> => {
+    const fetchProductsByProductsWithQuantities = async (productWithQuantityList: ProductWithQuantity[]): Promise<ProductWithQuantity[]> => {
         try {
-            const promises = [] as Promise<ProductById>[]
-            cartItems?.map((cartItem) => {
-                const promise = API_Products_GetById(cartItem.id);
+            const promises = [] as Promise<ProductWithQuantity>[]
+            productWithQuantityList?.map((productWithQuantity) => {
+                const promise = API_Products_GetByProductWithQuantity(productWithQuantity);
                 promises.push(promise)
             })
             const result = await Promise.all(promises).then((result) => { return result })
@@ -41,9 +54,9 @@ export default function CartScreen() {
             throw error
         }
     }
-    useEffect(() => {
-        GetProducts()
-    }, [])
+    useFocusEffect(useCallback(() => {
+        getProducts()
+    }, []))
     return (
         <View>
             {loading ? (
@@ -54,11 +67,11 @@ export default function CartScreen() {
                 <View>
                     <FlatList
                         style={styles.productList}
-                        data={productByIdList}
+                        data={productWithQuantities}
                         renderItem={(flatListItem) =>
-                            <CartItem productById={flatListItem.item}
+                            <CartItem productWithQuantity={flatListItem.item}
                             />}
-                        keyExtractor={(product) => product.id}
+                        keyExtractor={(productWithQuantity) => productWithQuantity.productid}
                         numColumns={1}
                     />
                     <View style={styles.checkoutContainer}>

@@ -3,7 +3,7 @@ import { DARK_RED } from "../../constants/colors";
 import { Button } from "react-native-paper";
 import * as SecureStore from 'expo-secure-store'
 import { NavigationProp, ParamListBase, useNavigation } from "@react-navigation/native";
-import { showYesNoAlert } from "../../utils/alertUtils";
+import { showYesNoAlert } from "../../utils/AlertUtils";
 export default function LogoutSection() {
     const navigation: NavigationProp<ParamListBase> = useNavigation()
     const logout = () => {

@@ -6,7 +6,7 @@ import { VALID_EMAIL } from "../../constants/regex";
 import { SCREEN_HEIGHT } from "../../constants/screens";
 import { API_User_UpdateDetails } from "../../services/apis/user";
 import { UpdateUserRequest } from "../../entities/UpdateUserRequest";
-import { showInfoAlert } from '../../utils/alertUtils';
+import { showInfoAlert } from '../../utils/AlertUtils';
 
 export default function InputForm() {
     const { control, handleSubmit, formState: { errors }, } = useForm({

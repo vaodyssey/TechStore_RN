@@ -6,7 +6,7 @@ import ProductsView, { ProductsViewRef } from './productsView';
 import { SCREEN_HEIGHT } from "../../constants/screens";
 import { Appbar } from "react-native-paper";
 import Header from "./header";
-import { showYesNoAlert } from "../../utils/alertUtils";
+import { showYesNoAlert } from "../../utils/AlertUtils";
 
 
 

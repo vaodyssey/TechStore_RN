@@ -5,22 +5,54 @@ import { DARK_BLUE, LIGHT_BLUE, PALE_PURPLE, PALE_WHITE, RED } from '../../const
 import InputSpinner from "react-native-input-spinner";
 import { useState } from "react";
 import { blue100 } from "react-native-paper/lib/typescript/styles/themes/v2/colors";
-import { SQLite_AddItemToCart, SQLite_OpenConnection } from '../../utils/DbUtils';
-import { ItemInCart } from "../../entities/CartItem";
-import { showInfoAlert } from "../../utils/alertUtils";
+import { SQLite_OpenConnection } from '../../repository/SqliteDDL';
+import { ItemInCart } from "../../entities/ItemInCart";
+import { showInfoAlert } from '../../utils/AlertUtils';
+import { SQLiteDatabase } from "expo-sqlite";
+import { CartRepository_DoesCartExist, CartRepository_GetSingleByUserId, CartRepository_Insert } from "../../repository/cartRepository";
+import { GetLoginResultFromSecureStore } from "../../utils/UserUtils";
+import { Cart } from "../../entities/Cart";
+import { GetCurrentDateTimeString } from "../../utils/DateTimeUtils";
+import { LoginResult } from "../../entities/LoginResult";
+import { CartItemRepository_Insert } from "../../repository/cartItemRepository";
 
 type AddToCartSectionProps = {
     productId: string
 }
 export default function AddToCartSection({ productId }: AddToCartSectionProps) {
     const [quantity, setQuantity] = useState(1)
+
     const addItemToCart = async () => {
-        const itemInCart = { id: productId, quantity: quantity } as ItemInCart
         const db = await SQLite_OpenConnection()
-        await SQLite_AddItemToCart(db, itemInCart).then(() => {
-            showInfoAlert('The product is successfully added to the cart.')
-        })
+        const loginResult = await GetLoginResultFromSecureStore()
+        await prepareCart(db, loginResult)
+        await addToCart(db, loginResult)
     }
+    const prepareCart = async (db: SQLiteDatabase, loginResult: LoginResult) => {
+        const isCartAvailable = await CartRepository_DoesCartExist(db)
+        if (!isCartAvailable) {
+            const cart: Cart = {
+                id: loginResult.userId,
+                datetime: GetCurrentDateTimeString()
+            }
+            await CartRepository_Insert(db, cart)
+        }
+
+    }
+    const addToCart = async (db: SQLiteDatabase, loginResult: LoginResult) => {
+        for (let index = 0; index < quantity; index++) {
+            const itemInCart: ItemInCart = {
+                id: 0,
+                productid: productId,
+                datetime: GetCurrentDateTimeString(),
+                cartid: loginResult.userId
+            }
+            CartItemRepository_Insert(db, itemInCart).then(() => {
+                showInfoAlert("Successfully added the product into the Cart.")
+            })
+        }
+    }
+
     return (
         <View style={styles.container}>
             <View style={styles.inputSpinner}>

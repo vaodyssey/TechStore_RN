@@ -10,16 +10,30 @@ import { FormatPriceToVnd } from "../utils/PriceUtils";
 import InputSpinner from "react-native-input-spinner";
 import { NavigationProp, ParamListBase, useNavigation } from "@react-navigation/native";
 import { ProductDetailsParams } from "../screens/ProductDetailsScreen";
+import { showYesNoAlert } from "../utils/AlertUtils";
+import { CartItemRepository_DeleteByProductId } from "../repository/cartItemRepository";
+import { SQLite_OpenConnection } from "../repository/SqliteDDL";
+import { ProductWithQuantity } from '../entities/ProductWithQuantity';
 
 type CartItemProps = {
-    productById: ProductById
+    productWithQuantity: ProductWithQuantity
 }
-export default function CartItem({ productById }: CartItemProps) {
-    const [quantity, setQuantity] = useState(1);
+export default function CartItem({ productWithQuantity }: CartItemProps) {
+    const [quantity, setQuantity] = useState<number>(productWithQuantity.quantity);
+    const productById = productWithQuantity.productById as ProductById
     const navigation: NavigationProp<ParamListBase> = useNavigation()
     const toProductDetailsPage = () => {
-        const params: ProductDetailsParams = { productId: productById.id }
+        const params: ProductDetailsParams = { productId: productWithQuantity.productid }
         navigation.navigate("productDetails", params);
+    }
+    const removeItemFromCart = () => {
+        showYesNoAlert("Do you really want to remove this item from the Cart?",
+            deleteByProductId)
+    }
+    const deleteByProductId = async () => {
+        const db = await SQLite_OpenConnection();
+
+        await CartItemRepository_DeleteByProductId(db, productById.id)
     }
 
     return (
@@ -46,7 +60,8 @@ export default function CartItem({ productById }: CartItemProps) {
                 />
 
                 <Button mode='contained' buttonColor={DARK_RED}
-                    icon='trash-can'>
+                    icon='trash-can'
+                    onPress={removeItemFromCart}>
                     Remove
                 </Button>
             </View>
